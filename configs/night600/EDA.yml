@@ -1,0 +1,78 @@
+MODEL:
+  PRETRAIN_PATH: 'vit_base_ics_cfs_lup.pth'
+  PRETRAIN_HW_RATIO: 2
+  IF_LABELSMOOTH: 'off'
+  IF_WITH_CENTER: 'no'
+  NAME: 'transformer'
+  NO_MARGIN: True
+  DEVICE_ID: ('0')
+  TRANSFORMER_TYPE: 'vit_base_patch16_224_TransReID'
+#  STRIDE_SIZE: [16, 16]
+  STRIDE_SIZE: [16, 16]
+  STEM_CONV: True
+#  ENHANCE_WEIGHT: 0.5
+  TRIPLET_LOSS_WEIGHT: 1.5  #damptriplet
+  METRIC_LOSS_TYPE: 'damptriplet'  # damptriplet, triplet, rris, instruct,....
+  APS: 3 #max limit to 3
+  ANS: 8
+
+
+INPUT:
+  SIZE_TRAIN: [256, 128]
+  SIZE_TEST: [256, 128]
+  PROB: 0.5 # random horizontal flip
+  RE_PROB: 0.5 # random erasing
+  PADDING: 10
+  PIXEL_MEAN: [0.1315, 0.1268, 0.1209]
+  PIXEL_STD: [0.0954, 0.0954, 0.0888]
+
+DATASETS:
+  NAMES: ('night600')
+  ROOT_DIR: ('/media/lenovo/8fff525d-1701-4726-b55f-3d59430b9e6f/zjy/NightReID-zjy/data')
+
+DATALOADER:
+  SAMPLER: 'softmax_triplet'
+  NUM_INSTANCE: 4 #4
+  NUM_WORKERS: 8
+
+SOLVER:
+  OPTIMIZER_NAME: 'SGD'
+  MAX_EPOCHS: 120
+  BASE_LR: 0.0004
+  WARMUP_EPOCHS: 20
+  IMS_PER_BATCH: 64 #64
+  WARMUP_METHOD: 'cosine'
+  LARGE_FC_LR: False
+  CHECKPOINT_PERIOD: 10
+  LOG_PERIOD: 50
+  EVAL_PERIOD: 10
+  WEIGHT_DECAY:  1e-4
+  WEIGHT_DECAY_BIAS: 1e-4
+  BIAS_LR_FACTOR: 2
+
+TEST:
+  EVAL: True
+  IMS_PER_BATCH: 128
+  RE_RANKING: False
+  WEIGHT: './0628/3nightreid/528wD/transformer_best_mAP.pth'
+  NECK_FEAT: 'before'
+  FEAT_NORM: 'yes'
+
+
+OUTPUT_DIR: './temp2/0817/night600/'
+
+#python train.py --config_file configs/night600/EDA.yml
+#python test.py --config_file configs/night600/EDA.yml
+
+# nohup python train.py --config_file configs/night600/EDA.yml > 0624.log 2>&1 &
+# nohup python train.py --config_file configs/night600/EDA.yml > /dev/null 2>&1 &
+# 实时查看训练输出
+# tail -f 0624.log
+
+# # 查看进程是否还在跑
+# ps aux | grep train.py
+
+# # 如果想停止训练
+# kill 12345   # 换成你的进程号
+
+# conda activate /media/jqzhu/APE/OTHERS/Anaconda/envs/Night-ReID

@@ -1,0 +1,8 @@
+__pycache__/
+.py[cod]
+datasets/
+model/
+*.pth
+*.ckpt
+*.zip
+*.tar.gz
