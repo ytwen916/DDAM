@@ -8,6 +8,8 @@ from utils.metrics import R1_mAP_eval
 from torch.cuda import amp
 import torch.distributed as dist
 from loss.mmd_loss import MMDLoss
+import numpy as np
+import torch.nn.functional as F
 
 def do_train(cfg,
              model,
@@ -150,7 +152,7 @@ def do_train(cfg,
                         img = img.to(device)
                         camids = camids.to(device)
                         target_view = target_view.to(device)
-                        feat_i= model(img, imgg, cam_label=camids, view_label=target_view) # d for do enhance
+                        feat_i= model(img, cam_label=camids, view_label=target_view) # d for do enhance
                         evaluator.update((feat_i, vid, camid))
                 cmc_ls, mAP_ls, _, _, _, _, _ = evaluator.compute()
                 logger.info("Validation Results - Epoch: {}".format(epoch))
@@ -163,6 +165,183 @@ def do_train(cfg,
                     best_mAP = mAP_ls[-1]
                     torch.save(model.state_dict(), os.path.join(output_dir, cfg.MODEL.NAME + '_best_mAP.pth'))
                 torch.cuda.empty_cache()
+
+
+
+def extract_tsne_features(
+        cfg,
+        model,
+        val_loader,
+        num_query):
+    """
+    Extract features for single-model t-SNE visualization.
+
+    Returns:
+        features:    [N, D]
+        labels:      [N]
+        modalities:  [N], 0=query, 1=gallery
+        img_paths:   image-path order for consistency checking
+    """
+
+    device = "cuda"
+
+    # ========================================================
+    # 1. Move model to GPU
+    # ========================================================
+
+    if device:
+
+        if torch.cuda.device_count() > 1:
+
+            print(
+                "Using {} GPUs for t-SNE feature extraction"
+                .format(
+                    torch.cuda.device_count()
+                )
+            )
+
+            model = nn.DataParallel(
+                model
+            )
+
+        model.to(
+            device
+        )
+
+    model.eval()
+
+
+    # ========================================================
+    # 2. Containers
+    # ========================================================
+
+    feature_list = []
+    label_list = []
+    img_path_list = []
+
+
+    # ========================================================
+    # 3. Extract features
+    # ========================================================
+
+    for n_iter, (
+            img,
+            pid,
+            camid,
+            camids,
+            target_view,
+            imgpath
+    ) in enumerate(val_loader):
+
+        with torch.no_grad():
+
+            img = img.to(
+                device
+            )
+
+            camids = camids.to(
+                device
+            )
+
+            target_view = target_view.to(
+                device
+            )
+
+            feat_i = model(
+                img,
+                cam_label=camids,
+                view_label=target_view
+            )
+
+
+            # Same normalization convention as evaluation
+            if str(
+                cfg.TEST.FEAT_NORM
+            ).lower() == "yes":
+
+                feat_i = F.normalize(
+                    feat_i,
+                    p=2,
+                    dim=1
+                )
+
+
+            feature_list.append(
+                feat_i.detach().cpu()
+            )
+
+
+            if torch.is_tensor(pid):
+
+                label_list.append(
+                    pid.detach().cpu()
+                )
+
+            else:
+
+                label_list.append(
+                    torch.as_tensor(pid)
+                )
+
+
+            img_path_list.extend(
+                list(imgpath)
+            )
+
+
+    # ========================================================
+    # 4. Merge batches
+    # ========================================================
+
+    features = torch.cat(
+        feature_list,
+        dim=0
+    ).numpy()
+
+    labels = torch.cat(
+        label_list,
+        dim=0
+    ).numpy()
+
+
+    # ========================================================
+    # 5. Query / gallery flag
+    # ========================================================
+
+    modalities = np.concatenate(
+        [
+            np.zeros(
+                num_query,
+                dtype=np.int64
+            ),
+
+            np.ones(
+                len(labels) - num_query,
+                dtype=np.int64
+            ),
+        ]
+    )
+
+
+    print(
+        "Extracted t-SNE features: "
+        "features={}, labels={}, "
+        "query={}, gallery={}"
+        .format(
+            features.shape,
+            labels.shape,
+            num_query,
+            len(labels) - num_query
+        )
+    )
+
+
+    return (
+        features,
+        labels,
+        modalities,
+        img_path_list
+    )
 
 
 def do_inference(cfg,

@@ -1,4 +1,4 @@
-from loss.triplet_loss import DAMPTripletLoss
+from loss.triplet_loss import DDAMTripletLoss
 from model.Myloss import MMDLoss
 from utils.logger import setup_logger
 from datasets import make_dataloader
@@ -47,10 +47,10 @@ if __name__ == '__main__':
         torch.cuda.set_device(args.local_rank)
 
 
-    # if cfg.MODEL.METRIC_LOSS_TYPE != "damptriplet":
+    # if cfg.MODEL.METRIC_LOSS_TYPE != "ddamtriplet":
     #     assert cfg.MODEL.TRIPLET_LOSS_WEIGHT == 1.0
     #
-    if cfg.MODEL.METRIC_LOSS_TYPE=='damptriplet':
+    if cfg.MODEL.METRIC_LOSS_TYPE=='ddamtriplet':
         output_dir = cfg.OUTPUT_DIR + "/LOSSTYPE_"+cfg.MODEL.METRIC_LOSS_TYPE+"_TRIWeight"+str(cfg.MODEL.TRIPLET_LOSS_WEIGHT)+"_APS" + str(cfg.MODEL.APS)+"_ANS" + str(cfg.MODEL.ANS)
     else:
         output_dir = cfg.OUTPUT_DIR + "/LOSSTYPE_" + cfg.MODEL.METRIC_LOSS_TYPE + "_TRIWeight" + str(
@@ -79,11 +79,11 @@ if __name__ == '__main__':
     logger.info("Running with config:\n{}".format(cfg))
 
 
-    os.environ['CUDA_VISIBLE_DEVICES'] = cfg.MODEL.DEVICE_ID
+    # os.environ['CUDA_VISIBLE_DEVICES'] = cfg.MODEL.DEVICE_ID
     train_loader, train_loader_normal, val_loader, num_query, num_classes, camera_num, view_num = make_dataloader(cfg)
 
     model = make_model(cfg, num_class=num_classes, camera_num=camera_num, view_num = view_num)
-    loss_func = make_loss(cfg, num_classes=num_classes)
+    loss_func, center_criterion  = make_loss(cfg, num_classes=num_classes)
 
     optimizer, optimizer_center = make_optimizer(cfg, model)
 
