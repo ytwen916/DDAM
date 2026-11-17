@@ -11,7 +11,7 @@ MODEL:
   STEM_CONV: True
   TRIPLET_LOSS_WEIGHT: 1.5
   METRIC_LOSS_TYPE: 'ddamtriplet'  # triplet
-  APS: 1 #max limit to 3
+  APS: 3 #max limit to 3
   ANS: 8
 
 
