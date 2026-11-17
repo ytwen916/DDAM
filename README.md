@@ -7,13 +7,13 @@ PyTorch implementation of **Dynamic Difficulty-Aware Mining for RGB-Based Low-Li
 
 ## Updates
 
-- **(2026-11-13)** Released the training and testing code, model and dataset packages, configurations, result figures, and feature artifacts.
+- **(2026-11-13)** Released the training and testing code, model and data-loading modules, configuration files, result figures, and feature artifacts.
 
 ## Highlights
 
-Low-light noise and visual distortion make same-identity and different-identity samples difficult to separate. We propose dynamic difficulty-aware mining (DDAM), a relation-conditioned triplet-learning method that adaptively determines negative participation for each anchor. DDAM first estimates anchor difficulty from valid same-identity samples. It then sorts the cross-identity distances and dynamically selects a compact set of negatives according to the anchor-specific difficulty reference. Ambiguous anchors receive broader negative supervision, while more discriminative anchors focus on fewer informative negatives.
+Low-light noise and visual distortion make same-identity and different-identity samples difficult to separate. We propose dynamic difficulty-aware mining (DDAM), a relation-conditioned triplet-learning method that adaptively determines negative participation for each anchor. DDAM first estimates anchor difficulty from valid same-identity samples. It then sorts the cross-identity distances and dynamically selects a compact set of negatives according to the anchor-specific difficulty reference. Ambiguous anchors receive broader negative supervision, whereas more discriminative anchors rely on a smaller set of selected negatives.
 
-DDAM is applied only to the training objective. It keeps the single-branch TransReID-SSL backbone, requires no additional synthetic training data, and introduces no extra inference branch.
+DDAM is applied only to the training objective. It keeps the single-branch TransReID-SSL backbone, requires no additional training data, and introduces no extra inference branch.
 
 <p align="center">
   <img src="res/method_framework.png" width="96%" alt="DDAM framework">
@@ -190,4 +190,4 @@ If this project is useful in your research, please cite:
 
 ## Acknowledgements
 
-This repository is developed from the [NightReID/EDA](https://github.com/msm8976/NightReID) codebase, which follows [TransReID](https://github.com/damo-cv/TransReID) and [reid-strong-baseline](https://github.com/michuanhaohao/reid-strong-baseline). We use the [TransReID-SSL](https://github.com/damo-cv/TransReID-SSL) pretrained backbone and evaluate on [NightReID](https://github.com/msm8976/NightReID) and [Night600/IDF](https://github.com/Alexadlu/IDF). Optional reference utilities retained in the repository credit [AdaSP](https://github.com/Astaxanthin/AdaSP), [Proxy-NCA](https://github.com/dichotomies/proxy-nca), and [person-re-ranking](https://github.com/zhunzhong07/person-re-ranking); they are not used in the main DDAM experiments.
+This repository is developed from the [NightReID/EDA](https://github.com/msm8976/NightReID) codebase, which follows [TransReID](https://github.com/damo-cv/TransReID) and [reid-strong-baseline](https://github.com/michuanhaohao/reid-strong-baseline). We use the [TransReID-SSL](https://github.com/damo-cv/TransReID-SSL) pretrained backbone and evaluate on [NightReID](https://github.com/msm8976/NightReID) and [Night600](https://github.com/Alexadlu/IDF). The repository also retains optional reference implementations of [AdaSP](https://github.com/Astaxanthin/AdaSP), [Proxy-NCA](https://github.com/dichotomies/proxy-nca), and [person-re-ranking](https://github.com/zhunzhong07/person-re-ranking); these are not used in the main DDAM experiments.
