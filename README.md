@@ -7,7 +7,7 @@ PyTorch implementation of **Dynamic Difficulty-Aware Mining for RGB-Based Low-Li
 
 ## Updates
 
-- **(2026-11-13)** Released the training code, configurations, result figures, and feature artifacts.
+- **(2026-11-13)** Released the training and testing code, model and dataset packages, configurations, result figures, and feature artifacts.
 
 ## Highlights
 
@@ -41,6 +41,8 @@ pip install numpy==1.24.4 scipy==1.10.1 scikit-learn==1.3.2 \
 The provided `requirements.txt` is an environment snapshot and contains several machine-local Conda paths. Replace those entries before installing it on another machine.
 
 ### Prepare Datasets
+
+Note: The repository includes the `datasets/` package for data loading, but the original NightReID and Night600 image data are not included. Please prepare the datasets separately and configure `DATASETS.ROOT_DIR` in the corresponding configuration files.
 
 Download the datasets from their original providers:
 
@@ -89,8 +91,6 @@ git lfs pull
 
 ### Training
 
-> **Release note:** the current Git snapshot does not track the `datasets/` and `model/` packages imported by the entry scripts. Add them from the complete release package before running end-to-end training or testing.
-
 ```bash
 # NightReID
 python train.py \
@@ -102,8 +102,6 @@ python train.py \
   --config_file configs/night600/DDAM.yml \
   DATASETS.ROOT_DIR /path/to/your_dataset_root
 ```
-
-`MODEL.APS 3` matches the Night600 setting used in the paper and the released DDAM loss.
 
 ### Testing
 
