@@ -118,13 +118,13 @@ python test.py \
   DATASETS.ROOT_DIR /path/to/your_dataset_root \
   TEST.WEIGHT /path/to/transformer_best_mAP.pth
 ```
-For NightReID, four official evaluation protocols are available. The current dataset loader defaults to `1000_wD`. To evaluate another protocol, update the active `self.query_dir` and `self.gallery_dir` assignments in `datasets/nightreid.py` according to the following table:
+For NightReID, four official evaluation protocols are available. The current dataset loader defaults to `528_wD`. To evaluate another protocol, update the active `self.query_dir` and `self.gallery_dir` assignments in `datasets/nightreid.py` according to the following table:
 
 | Protocol | Query directory | Gallery directory |
 |---|---|---|
-| `528_wD` | `query/` | `bounding_box_test/` |
+| `528_wD` | `query/` | `bounding_box_test_withDistractors/` |
 | `528_woD` | `query/` | `bounding_box_test-528-noDistractors/` |
-| `1000_wD` (default) | `query-1000/` | `bounding_box_test_withDistractors/` |
+| `1000_wD` | `query-1000/` | `bounding_box_test_withDistractors/` |
 | `1000_woD` | `query-1000/` | `bounding_box_test-1000-noDistractors/` |
 
 Here, `wD` and `woD` denote evaluation with and without distractor identities, respectively. Keep only one query-directory assignment and one gallery-directory assignment active when switching protocols.
