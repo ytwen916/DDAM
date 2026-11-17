@@ -184,8 +184,7 @@ If this project is useful in your research, please cite:
 @misc{wen2026ddam,
   title  = {Dynamic Difficulty-Aware Mining for RGB-Based Low-Light Person Re-Identification},
   author = {Y. T. Wen and W. J. Xiang and H. Zhang and X. X. Zhu and H. S. Liu and H. Q. Zeng and J. Q. Zhu},
-  year   = {2026},
-  note   = {Manuscript}
+  year   = {2026}
 }
 ```
 
