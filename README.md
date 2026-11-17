@@ -13,7 +13,7 @@ PyTorch implementation of **Dynamic Difficulty-Aware Mining for RGB-Based Low-Li
 
 Low-light noise and visual distortion make same-identity and different-identity samples difficult to separate. We propose dynamic difficulty-aware mining (DDAM), a relation-conditioned triplet-learning method that adaptively determines negative participation for each anchor. DDAM first estimates anchor difficulty from valid same-identity samples. It then sorts the cross-identity distances and dynamically selects a compact set of negatives according to the anchor-specific difficulty reference. Ambiguous anchors receive broader negative supervision, while more discriminative anchors focus on fewer informative negatives.
 
-DDAM is applied only to the training objective. It keeps the single-branch TransReID-SSL backbone, requires no additional training data, and introduces no extra inference branch.
+DDAM is applied only to the training objective. It keeps the single-branch TransReID-SSL backbone, requires no additional synthetic training data, and introduces no extra inference branch.
 
 <p align="center">
   <img src="res/method_framework.png" width="96%" alt="DDAM framework">
@@ -31,10 +31,10 @@ The experiments use Python 3.8, PyTorch 1.8.2, torchvision 0.9.2, and CUDA 11.1.
 conda create -n ddam python=3.8 -y
 conda activate ddam
 
-pip install torch==1.8.2+cu111 torchvision==0.9.2+cu111 \
-  -f https://download.pytorch.org/whl/torch_stable.html
-pip install numpy==1.26.4 scipy==1.13.1 scikit-learn==1.6.1 \
-  matplotlib==3.9.4 Pillow==9.3.0 PyYAML==6.0.2 yacs==0.1.8 \
+pip install torch==1.8.2 torchvision==0.9.2 torchaudio==0.8.2 \
+  --extra-index-url https://download.pytorch.org/whl/lts/1.8/cu111
+pip install numpy==1.24.4 scipy==1.10.1 scikit-learn==1.3.2 \
+  matplotlib==3.7.5 Pillow==9.3.0 PyYAML==6.0.2 yacs==0.1.8 \
   timm==1.0.15 tqdm==4.67.1
 ```
 
@@ -100,7 +100,6 @@ python train.py \
 # Night600
 python train.py \
   --config_file configs/night600/DDAM.yml \
-  MODEL.APS 3 \
   DATASETS.ROOT_DIR /path/to/your_dataset_root
 ```
 
@@ -118,7 +117,6 @@ python test.py \
 # Night600
 python test.py \
   --config_file configs/night600/DDAM.yml \
-  MODEL.APS 3 \
   DATASETS.ROOT_DIR /path/to/your_dataset_root \
   TEST.WEIGHT /path/to/transformer_best_mAP.pth
 ```
