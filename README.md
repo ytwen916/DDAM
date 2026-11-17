@@ -11,7 +11,7 @@ PyTorch implementation of **Dynamic Difficulty-Aware Mining for RGB-Based Low-Li
 
 ## Highlights
 
-Low-light noise and visual distortion make same-identity and different-identity samples difficult to separate. We propose **dynamic difficulty-aware mining (DDAM)**, a relation-conditioned metric-learning method that adapts negative participation to each anchor. DDAM first estimates anchor difficulty from valid same-identity samples. It then sorts the cross-identity distances and dynamically selects a compact set of negatives according to the anchor-specific difficulty reference. Ambiguous anchors receive broader negative supervision, while more discriminative anchors focus on fewer informative negatives.
+Low-light noise and visual distortion make same-identity and different-identity samples difficult to separate. We propose dynamic difficulty-aware mining (DDAM), a relation-conditioned triplet-learning method that adaptively determines negative participation for each anchor. DDAM first estimates anchor difficulty from valid same-identity samples. It then sorts the cross-identity distances and dynamically selects a compact set of negatives according to the anchor-specific difficulty reference. Ambiguous anchors receive broader negative supervision, while more discriminative anchors focus on fewer informative negatives.
 
 DDAM is applied only to the training objective. It keeps the single-branch TransReID-SSL backbone, requires no additional training data, and introduces no extra inference branch.
 
