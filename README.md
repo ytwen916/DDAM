@@ -51,7 +51,7 @@ Download the datasets from their original providers:
 
 | Dataset | Identities | Cameras | Images | Evaluation setting |
 |---|---:|---:|---:|---|
-| NightReID | 1,500 labeled + 1,096 distractor IDs | 6 | 53,239 | 528/1,000 IDs, with or without distractors |
+| NightReID | 1,500 labeled + 1,096 unlabeled IDs | 6 | 53,239 | 528/1,000 IDs, with or without distractors |
 | Night600 | 600 | 8 | 28,813 | Standard query/gallery protocol |
 
 Organize the datasets as follows:
